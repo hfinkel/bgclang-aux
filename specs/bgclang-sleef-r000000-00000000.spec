@@ -17,7 +17,7 @@ License: University of Illinois/NCSA Open Source License
 Vendor: ALCF (Argonne Leadership Computing Facility)
 Group: Development/Compilers
 URL: http://trac.alcf.anl.gov/projects/llvm-bgq/
-Source0: sleef-r%{rev}-%{date}.tar.bz2
+Source0: sleef-bgq-r%{rev}-%{date}.tar.bz2
 AutoReqProv: no
 
 %description
