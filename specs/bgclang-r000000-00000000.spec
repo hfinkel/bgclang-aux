@@ -8,10 +8,10 @@ Prefix: /opt/bgclang
 %define date 00000000
 
 Name: bgclang-r%{rev}-%{date}
-BuildRequires: bgclang-stage1
-BuildRequires: bgclang-stage1-libcxx
+BuildRequires: bgclang-stage2
+BuildRequires: bgclang-stage2-libcxx
 BuildRequires: bgclang-binutils-r%{rev}-%{date}
-Requires: bgclang-stage1-libcxx
+Requires: bgclang-stage2-libcxx
 Requires: bgclang-binutils-r%{rev}-%{date}
 Requires: bgclang-gdb-r%{rev}-%{date}
 Version: 1
@@ -56,16 +56,16 @@ cd ../../..
 rm -rf ../llvm-build
 mkdir -p ../llvm-build
 
-LD_LIBRARY_PATH="$PREFIX/stage1/libc++/lib:$LD_LIBRARY_PATH"
+LD_LIBRARY_PATH="$PREFIX/stage2/libc++/lib:$LD_LIBRARY_PATH"
 export LD_LIBRARY_PATH
 
-(cd ../llvm-build && ../llvm/configure CC=$PREFIX/stage1/bin/clang CXX=$PREFIX/stage1/bin/clang++ CXXFLAGS="-I$PREFIX/stage1/libc++/include/c++/v1" LDFLAGS="-L$PREFIX/stage1/libc++/lib -stdlib=libc++" --enable-shared --enable-optimized --with-optimize-option="-O3 -fno-altivec" --with-extra-ld-options="'-Wl,-rpath,\$\$ORIGIN/../lib' '-Wl,-rpath,\$\$ORIGIN/../../stage1/libc++/lib' -Wl,--build-id" --prefix=/opt/bgclang/r%{rev}-%{date} --with-binutils-include=$BUINC)
+(cd ../llvm-build && ../llvm/configure CC=$PREFIX/stage2/bin/clang CXX=$PREFIX/stage2/bin/clang++ CXXFLAGS="-I$PREFIX/stage2/libc++/include/c++/v1" LDFLAGS="-L$PREFIX/stage2/libc++/lib -stdlib=libc++" --enable-shared --enable-optimized --with-optimize-option="-O3 -fno-altivec" --with-extra-ld-options="'-Wl,-rpath,\$\$ORIGIN/../lib' '-Wl,-rpath,\$\$ORIGIN/../../stage2/libc++/lib' -Wl,--build-id" --prefix=/opt/bgclang/r%{rev}-%{date} --with-binutils-include=$BUINC)
 (cd ../llvm-build && make -j16 REQUIRES_RTTI=1)
 
 %install
 PREFIX=$(rpm --dbpath %{_dbpath} -q --queryformat '%{INSTPREFIXES}' bgclang-binutils-r%{rev}-%{date} 2> /dev/null)
 
-LD_LIBRARY_PATH="$PREFIX/stage1/libc++/lib:$LD_LIBRARY_PATH"
+LD_LIBRARY_PATH="$PREFIX/stage2/libc++/lib:$LD_LIBRARY_PATH"
 export LD_LIBRARY_PATH
 
 cd ../../..
@@ -102,7 +102,7 @@ for d in bin docs include lib scan-build scan-view share wbin mpi; do
 done
 
 cd r%{rev}-%{date}
-(cd binutils/lib && mkdir -p bfd-plugins && cd bfd-plugins && ln -sf ../../../lib/LLVMgold.so && ln -sf ../../../lib/libLTO.so && ln -sf ../../../lib/libLLVM-3.?svn.so && ln -sf ../../../../stage1/libc++/lib/libc++.so.1)
+(cd binutils/lib && mkdir -p bfd-plugins && cd bfd-plugins && ln -sf ../../../lib/LLVMgold.so && ln -sf ../../../lib/libLTO.so && ln -sf ../../../lib/libLLVM-3.?svn.so && ln -sf ../../../../stage2/libc++/lib/libc++.so.1)
 (cd binutils/bin && for f in ar nm ld* as; do (cd ../../wbin && ln -sf ../binutils/bin/$f bgclang-$f && ln -sf ../binutils/bin/$f powerpc64-bgq-linux-clang-$f); done)
 (cd gdb/bin && for f in gdb; do (cd ../../wbin && ln -sf ../gdb/bin/$f bgclang-$f && ln -sf ../gdb/bin/$f powerpc64-bgq-linux-clang-$f); done)
 
