@@ -100,6 +100,9 @@ for arg in $user_params; do
 	-shared|-dynamic|-fpic|-fPIC|-fsanitize=address)
 		link_static=0
 	;;
+	-static)
+		link_static=1
+	;;
 	-S|-E|-M)
 		will_asm=0
 		will_link=0
