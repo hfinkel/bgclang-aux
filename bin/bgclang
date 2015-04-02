@@ -180,6 +180,10 @@ if [ $link_static = 1 ]; then
 	BGCLANG_TARGET_FLAGS="$BGCLANG_TARGET_FLAGS -static"
 fi
 
+if [ $will_link = 1 -a $link_static = 0 ]; then
+	BGCLANG_TARGET_FLAGS="$BGCLANG_TARGET_FLAGS -Wl,--enable-new-dtags"
+fi
+
 if [ $use_libcxx = 1 ]; then
 	BGCLANG_TARGET_INC="-Xclang -isystem -Xclang /home/projects/llvm/r000000-00000000/libc++/include $BGCLANG_TARGET_INC"
 	if [ $will_link = 1 ]; then
