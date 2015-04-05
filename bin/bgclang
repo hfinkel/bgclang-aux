@@ -30,6 +30,8 @@ if [ $old_toolchain = 0 ]; then
 	fi
 fi
 
+TC_FIXUP=$(readlink -f ${BINUTILS}/../../toolchain-${VLIBSTDCXX}-fixup)
+
 BGSYS_TOOLCHAIN_HOME=$BGSYS_FLOOR/$GNU_LINUX
 BGSYS_CRT_LIB=${BGSYS_TOOLCHAIN_HOME}/powerpc64-bgq-linux/lib
 BGCLANG_TARGET_FLAGS="-target powerpc64-bgq-linux -gcc-toolchain $BGSYS_TOOLCHAIN_HOME -B${BINUTILS}/bin -B${BGSYS_CRT_LIB} -mcpu=a2q -ffp-contract=fast -fno-math-errno"
@@ -196,8 +198,14 @@ fi
 
 post_libs=
 if [ $will_link = 1 ]; then
+	if [ -d "$TC_FIXUP" ]; then
+		BGCLANG_TARGET_FLAGS="$BGCLANG_TARGET_FLAGS -L$TC_FIXUP/lib"
+	fi
 	BGCLANG_TARGET_FLAGS="$BGCLANG_TARGET_FLAGS -L$BGSYS_FLOOR/$GNU_LINUX/powerpc64-bgq-linux/lib"
 	if [ $link_static = 0 ]; then
+		if [ -d "$TC_FIXUP" ]; then
+			BGCLANG_TARGET_FLAGS="$BGCLANG_TARGET_FLAGS -Wl,-rpath -Wl,$TC_FIXUP/lib"
+		fi
 		BGCLANG_TARGET_FLAGS="$BGCLANG_TARGET_FLAGS -Wl,-rpath -Wl,$BGSYS_FLOOR/$GNU_LINUX/powerpc64-bgq-linux/lib"
 		BGCLANG_TARGET_FLAGS="$BGCLANG_TARGET_FLAGS -Wl,--dynamic-linker=$BGSYS_FLOOR/$GNU_LINUX/powerpc64-bgq-linux/lib/ld64.so.1"
 	fi

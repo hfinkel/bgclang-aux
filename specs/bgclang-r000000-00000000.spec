@@ -14,6 +14,7 @@ BuildRequires: bgclang-binutils-r%{rev}-%{date}
 Requires: bgclang-stage2-libcxx
 Requires: bgclang-binutils-r%{rev}-%{date}
 Requires: bgclang-gdb-r%{rev}-%{date}
+Requires: toolchain-fixup = 4.7.2
 Version: 1
 Release: 1
 Summary: bgclang (A modern software programming environment for the BG/Q)
