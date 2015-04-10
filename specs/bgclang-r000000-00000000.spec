@@ -29,6 +29,7 @@ Source3: mpi-r%{rev}-%{date}.tar.bz2
 Source4: wbin-r%{rev}-%{date}.tar.bz2
 Source5: clang-tools-extra-r%{rev}.tar.bz2
 Source6: ppcfloor-fixup-r%{rev}-%{date}.tar.bz2
+Source7: c11threads-r%{rev}-%{date}.tar.bz2
 
 AutoReqProv: no
 
@@ -79,6 +80,7 @@ cp -Rf %{_builddir}/llvm/tools/clang/tools/scan-{build,view} %{buildroot}/opt/bg
 (cd %{buildroot}/opt/bgclang/r%{rev}-%{date} && tar -xjvf %{_sourcedir}/wbin-r%{rev}-%{date}.tar.bz2)
 (cd %{buildroot}/opt/bgclang/r%{rev}-%{date} && tar -xjvf %{_sourcedir}/mpi-r%{rev}-%{date}.tar.bz2)
 (cd %{buildroot}/opt/bgclang/r%{rev}-%{date} && tar -xjvf %{_sourcedir}/ppcfloor-fixup-r%{rev}-%{date}.tar.bz2)
+(cd %{buildroot}/opt/bgclang/r%{rev}-%{date} && tar -xjvf %{_sourcedir}/c11threads-r%{rev}-%{date}.tar.bz2)
 
 %files
 /opt/bgclang/r%{rev}-%{date}

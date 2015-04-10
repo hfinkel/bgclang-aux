@@ -47,7 +47,7 @@ if [ "x$BGCLANG_STATIC_LINKING" != xno ]; then
 	link_static=1
 fi
 
-BGCLANG_TARGET_INC="-Xclang -isystem -Xclang /home/projects/llvm/r000000-00000000/ppcfloor-fixup -Xclang -isystem -Xclang /home/projects/llvm/r000000-00000000/ppcfloor-fixup/spi/include -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR/comm/gcc/include -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR/comm/lib/gnu -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR/comm/sys/include -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR/spi/include -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR/spi/include/kernel/cnk"
+BGCLANG_TARGET_INC="-Xclang -isystem -Xclang /home/projects/llvm/r000000-00000000/c11threads -Xclang -isystem -Xclang /home/projects/llvm/r000000-00000000/ppcfloor-fixup -Xclang -isystem -Xclang /home/projects/llvm/r000000-00000000/ppcfloor-fixup/spi/include -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR/comm/gcc/include -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR/comm/lib/gnu -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR/comm/sys/include -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR/spi/include -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR/spi/include/kernel/cnk"
 if [ -d $SLEEF ]; then
 	BGCLANG_TARGET_INC="$BGCLANG_TARGET_INC -I$SLEEF/include"
 	BGCLANG_TARGET_FLAGS="$BGCLANG_TARGET_FLAGS -fveclib=SLEEF"
