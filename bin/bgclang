@@ -59,7 +59,6 @@ fi
 
 BGCLANG_TARGET_INC="$BGCLANG_TARGET_INC -Xclang -isystem -Xclang $BGSYS_FLOOR/$GNU_LINUX/powerpc64-bgq-linux/sys-include"
 
-user_params="$@"
 will_compile=0
 will_pp=0
 will_link=1
@@ -74,6 +73,9 @@ use_ias=1
 
 next_is_output=0
 next_is_lang=0
+
+process_params () {
+user_params="$@"
 for arg in $user_params; do
 	if [ $next_is_output = 1 ]; then
 		next_is_output=0
@@ -146,6 +148,12 @@ for arg in $user_params; do
 	-x)
 		next_is_lang=1
 	;;
+	@*)
+		# process response files
+		if [ -r "${arg#@}" ]; then
+			process_params $(cat "${arg#@}")
+		fi
+	;;
 	-*)
 		:
 	;;
@@ -162,6 +170,9 @@ for arg in $user_params; do
 	;;
 	esac
 done
+}
+
+process_params "$@"
 
 if [ $use_openmp = 1 -a -d $OMP ]; then
 	BGCLANG_TARGET_INC="$BGCLANG_TARGET_INC -I$OMP/include"
