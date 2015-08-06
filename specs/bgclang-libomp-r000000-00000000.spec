@@ -46,9 +46,11 @@ mkdir -p $DEST/include
 cd runtime/build
 for f in libiomp5.a libiomp5.so.1.0 libiomp5.so.1 libiomp5.so; do
 	cp -d $f $DEST/lib/
+	(cd $DEST/lib/ && ln -si $f $(echo $f | sed 's/iomp5/omp/'))
 done
 
 cp omp.h $DEST/include/omp.h
+cp ompt.h $DEST/include/ompt.h
 set +x
 
 %files
