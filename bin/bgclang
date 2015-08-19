@@ -92,6 +92,15 @@ for arg in $user_params; do
 		assembler|f95|ir|bc|lto-ir|lto-bc|ast)
 			will_pp=0
 		;;
+		c-header|c++-header|cl-header)
+			will_asm=0
+			will_link=0
+		;;
+		c-header-cpp-output|c++-header-cpp-output)
+			will_pp=0
+			will_asm=0
+			will_link=0
+		;;
 		*)
 			:
 		;;
