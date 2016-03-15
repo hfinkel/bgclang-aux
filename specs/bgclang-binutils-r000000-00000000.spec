@@ -15,8 +15,8 @@ License: GPLv3+
 Vendor: ALCF (Argonne Leadership Computing Facility)
 Group: Development/Compilers
 URL: http://trac.alcf.anl.gov/projects/llvm-bgq/
-Source0: binutils-2.24.tar.bz2
-Patch0: binutils-2.24-bgq.patch
+Source0: binutils-2.26.tar.bz2
+Patch0: binutils-2.26-bgq.patch
 AutoReqProv: no
 
 %description
@@ -24,7 +24,7 @@ GNU binutils, patched for the BG/Q. This package is intended as a companion to
 the bgclang package set.
 
 %prep
-%setup -q -n binutils-2.24
+%setup -q -n binutils-2.26
 %patch -P 0 -p1
 
 %build
