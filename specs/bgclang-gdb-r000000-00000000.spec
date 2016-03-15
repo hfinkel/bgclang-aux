@@ -15,8 +15,8 @@ License: GPLv3+
 Vendor: ALCF (Argonne Leadership Computing Facility)
 Group: Development/Compilers
 URL: http://trac.alcf.anl.gov/projects/llvm-bgq/
-Source0: gdb-7.8.tar.gz
-Patch0: gdb-7.8-bgq.patch
+Source0: gdb-7.11.tar.gz
+Patch0: gdb-7.11-bgq.patch
 AutoReqProv: no
 
 %description
@@ -24,7 +24,7 @@ GNU gdb, patched for the BG/Q. This package is intended as a companion to
 the bgclang package set.
 
 %prep
-%setup -q -n gdb-7.8
+%setup -q -n gdb-7.11
 %patch -P 0 -p1
 
 %build
