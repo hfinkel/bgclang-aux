@@ -28,13 +28,11 @@ the LLVM/Clang projects (http://llvm.org/).
 %prep
 %setup -q -n libcxx
 
-sed -i 's/\/c++\/v1//g' CMakeLists.txt
-sed -i 's/\/c++\/v1//g' include/CMakeLists.txt
-
 (cd .. && tar -jxf %{_sourcedir}/libstdc++fixup-r%{rev}-%{date}.tar.bz2)
 
 %build
 export PATH=/soft/buildtools/cmake/current/bin:$PATH
+export PATH=/soft/interpreters/python-2.7.9/powerpc64-linux-gnu/bin:$PATH
 
 PREFIX=$(rpm --dbpath %{_dbpath} -q --queryformat '%{INSTPREFIXES}' bgclang-r%{rev}-%{date} 2> /dev/null)
 CC=$PREFIX/r%{rev}-%{date}/bin/bgclang
@@ -45,21 +43,21 @@ export CXX
 
 DEST=%{buildroot}/opt/bgclang/r%{rev}-%{date}/libc++
 
+rm -rf ../libcxx-build
 mkdir -p ../libcxx-build
 cd ../libcxx-build
-rm -rf CMakeCache.txt CMakeFiles
 
 INCPATHS='/bgsys/drivers/toolchain/V1R2M1_base_4.7.2/gnu-linux-4.7.2/powerpc64-bgq-linux/include/c++/4.7.2;/bgsys/drivers/toolchain/V1R2M1_base_4.7.2/gnu-linux-4.7.2/powerpc64-bgq-linux/include/c++/4.7.2/powerpc64-bgq-linux'
 
-cmake ../libcxx -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_INSTALL_PREFIX=$DEST -DLIBCXX_CXX_ABI=libstdc++ -DLIBCXX_CXX_ABI_INCLUDE_PATHS="$INCPATHS" -DCMAKE_SHARED_LINKER_FLAGS='-Wl,--build-id'
+cmake ../libcxx -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_INSTALL_PREFIX=$DEST -DLIBCXX_CXX_ABI=libstdc++ -DLIBCXX_CXX_ABI_INCLUDE_PATHS="$INCPATHS" -DCMAKE_SHARED_LINKER_FLAGS='-Wl,--build-id' -DLLVM_CONFIG=$PREFIX/r%{rev}-%{date}/bin/llvm-config
 make clean
 make VERBOSE=1
 
+rm -rf ../libcxx-build-static
 mkdir -p ../libcxx-build-static
 cd ../libcxx-build-static
-rm -rf CMakeCache.txt CMakeFiles
 
-cmake ../libcxx -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_INSTALL_PREFIX=$DEST -DLIBCXX_CXX_ABI=libstdc++ -DLIBCXX_CXX_ABI_INCLUDE_PATHS="$INCPATHS" -DLIBCXX_ENABLE_SHARED=0
+cmake ../libcxx -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_INSTALL_PREFIX=$DEST -DLIBCXX_CXX_ABI=libstdc++ -DLIBCXX_CXX_ABI_INCLUDE_PATHS="$INCPATHS" -DLIBCXX_ENABLE_SHARED=0 -DLLVM_CONFIG=$PREFIX/r%{rev}-%{date}/bin/llvm-config
 make clean
 make VERBOSE=1
 

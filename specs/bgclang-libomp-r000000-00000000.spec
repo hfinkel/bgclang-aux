@@ -29,6 +29,7 @@ the LLVM/Clang projects (http://llvm.org/).
 
 %build
 export PATH=/soft/buildtools/cmake/current/bin:$PATH
+export PATH=/soft/interpreters/python-2.7.9/powerpc64-linux-gnu/bin:$PATH
 
 PREFIX=$(rpm --dbpath %{_dbpath} -q --queryformat '%{INSTPREFIXES}' bgclang-r%{rev}-%{date} 2> /dev/null)
 CC=$PREFIX/r%{rev}-%{date}/bin/bgclang

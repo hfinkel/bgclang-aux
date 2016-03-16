@@ -18,7 +18,6 @@ Vendor: ALCF (Argonne Leadership Computing Facility)
 Group: Development/Compilers
 URL: http://trac.alcf.anl.gov/projects/llvm-bgq/
 Source0: compiler-rt-bgq-r%{rev}-%{date}.tar.bz2
-Source1: llvm-cmake-modules-r%{rev}.tar.bz2
 AutoReqProv: no
 
 %description
@@ -28,48 +27,22 @@ the LLVM/Clang projects (http://llvm.org/).
 %prep
 %setup -q -n compiler-rt
 
-tar -jxf %{_sourcedir}/llvm-cmake-modules-r%{rev}.tar.bz2
-
 rm -rf ../compiler-rt-build
 mkdir -p ../compiler-rt-build
 
 %build
 export PATH=/soft/buildtools/cmake/current/bin:$PATH
+export PATH=/soft/interpreters/python-2.7.9/powerpc64-linux-gnu/bin:$PATH
 
 PREFIX=$(rpm --dbpath %{_dbpath} -q --queryformat '%{INSTPREFIXES}' bgclang-r%{rev}-%{date} 2> /dev/null)
 CC=$PREFIX/r%{rev}-%{date}/bin/bgclang
 CXX="$CC++"
 
 cd ../compiler-rt-build
-rm -rf CMakeCache.txt CMakeFiles
 
 DEST=%{buildroot}/opt/bgclang/r%{rev}-%{date}/compiler-rt
 
-cat > bgclang-toolchain.cmake <<EOF;
-SET(CMAKE_SYSTEM_NAME Linux)
-
-SET(CMAKE_C_COMPILER $CC)
-SET(CMAKE_CXX_COMPILER $CXX)
-
-SET(CMAKE_FIND_ROOT_PATH
-    /bgsys/drivers/ppcfloor
-    /bgsys/drivers/ppcfloor/gnu-linux/powerpc64-bgq-linux)
-
-ADD_DEFINITIONS(-I/bgsys/drivers/V1R2M0/ppc64 -I/bgsys/drivers/V1R2M0/ppc64/comm/sys/include -I/bgsys/drivers/V1R2M0/ppc64/spi/include -I/bgsys/drivers/V1R2M0/ppc64/spi/include/kernel/cnk)
-
-SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-
-SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "%{_builddir}/compiler-rt/llvm/cmake/modules")
-include(CheckCXXCompilerFlag)
-SET(LLVM_NATIVE_ARCH PowerPC)
-SET(LLVM_USE_SANITIZER "")
-
-SET(TARGET_TRIPLE powerpc64-bgq-linux)
-EOF
-
-cmake ../compiler-rt -DCMAKE_TOOLCHAIN_FILE=bgclang-toolchain.cmake -DCMAKE_INSTALL_PREFIX=$DEST -DLLVM_BINARY_DIR=$DEST -DLLVM_LIBRARY_DIR=$DEST -DLLVM_LIBRARY_OUTPUT_INTDIR=$DEST -DLLVM_TOOLS_BINARY_DIR=$DEST -DPACKAGE_VERSION=current -DCMAKE_CXX_FLAGS="-O3"
+cmake ../compiler-rt -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_INSTALL_PREFIX=$DEST -DLLVM_CONFIG_PATH=$PREFIX/r%{rev}-%{date}/bin/llvm-config -DCMAKE_CXX_FLAGS="-O3"
 
 %install
 
