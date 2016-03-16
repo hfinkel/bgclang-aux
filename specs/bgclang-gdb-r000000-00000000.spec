@@ -89,7 +89,7 @@ set +x
 # TODO: Once the toolchain and libs are new enough for ld.gold, add --enable-gold=default 
 ../configure --without-auto-load-safe-path --prefix=/opt/bgclang/r%{rev}-%{date}/gdb --enable-checking=no
 
-make -j16
+make -j32
 cd ..
 
 %install

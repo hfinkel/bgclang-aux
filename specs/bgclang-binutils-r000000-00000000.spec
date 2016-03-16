@@ -86,8 +86,8 @@ set +x
 # TODO: Once the toolchain and libs are new enough for ld.gold, add --enable-gold=default 
 ../configure --enable-gold --enable-plugins --prefix=/opt/bgclang/r%{rev}-%{date}/binutils --enable-checking=no
 
-make -j16 all-gold
-make -j16
+make -j32 all-gold
+make -j32
 cd ..
 
 %install

@@ -51,6 +51,8 @@ cd tools/clang
 cd ../..
 
 %build
+export PATH=/soft/buildtools/cmake/current/bin:$PATH
+
 PREFIX=$(rpm --dbpath %{_dbpath} -q --queryformat '%{INSTPREFIXES}' bgclang-binutils-r%{rev}-%{date} 2> /dev/null)
 BUINC=$PREFIX/r%{rev}-%{date}/binutils/include
 
@@ -61,8 +63,10 @@ mkdir -p ../llvm-build
 LD_LIBRARY_PATH="$PREFIX/stage2/libc++/lib:$LD_LIBRARY_PATH"
 export LD_LIBRARY_PATH
 
-(cd ../llvm-build && ../llvm/configure CC=$PREFIX/stage2/bin/clang CXX=$PREFIX/stage2/bin/clang++ CXXFLAGS="-I$PREFIX/stage2/libc++/include/c++/v1" LDFLAGS="-L$PREFIX/stage2/libc++/lib -stdlib=libc++" --enable-shared --enable-optimized --with-optimize-option="-O3 -fno-altivec" --with-extra-ld-options="'-Wl,-rpath,\$\$ORIGIN/../lib' '-Wl,-rpath,\$\$ORIGIN/../../stage2/libc++/lib' -Wl,--build-id" --prefix=/opt/bgclang/r%{rev}-%{date} --with-binutils-include=$BUINC)
-(cd ../llvm-build && make -j16 REQUIRES_RTTI=1)
+CXXLDFLAGS="-L$PREFIX/stage2/libc++/lib -stdlib=libc++ '-Wl,-rpath,\$ORIGIN/../../stage2/libc++/lib' -Wl,--build-id"
+
+(cd ../llvm-build && cmake -DCMAKE_C_COMPILER=$PREFIX/stage2/bin/clang -DCMAKE_CXX_COMPILER=$PREFIX/stage2/bin/clang++ -DLLVM_ENABLE_EH=ON -DLLVM_ENABLE_RTTI=ON -DCMAKE_CXX_FLAGS="-I$PREFIX/stage2/libc++/include/c++/v1" -DCMAKE_EXE_LINKER_FLAGS="$CXXLDFLAGS" -DCMAKE_SHARED_LINKER_FLAGS="$CXXLDFLAGS" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O3 -fno-altivec" -DCMAKE_INSTALL_PREFIX=/opt/bgclang/r%{rev}-%{date} -DLLVM_BINUTILS_INCDIR=$BUINC -DCLANG_VENDOR="bgclang r%{rev}-%{date}" ../llvm)
+(cd ../llvm-build && make -j32)
 
 %install
 PREFIX=$(rpm --dbpath %{_dbpath} -q --queryformat '%{INSTPREFIXES}' bgclang-binutils-r%{rev}-%{date} 2> /dev/null)
@@ -71,7 +75,7 @@ LD_LIBRARY_PATH="$PREFIX/stage2/libc++/lib:$LD_LIBRARY_PATH"
 export LD_LIBRARY_PATH
 
 cd ../../..
-(cd ../llvm-build && make -j16 REQUIRES_RTTI=1 DESTDIR=%{buildroot} install)
+(cd ../llvm-build && make -j32 DESTDIR=%{buildroot} install)
 cp -Rf %{_builddir}/llvm/tools/clang/tools/scan-{build,view} %{buildroot}/opt/bgclang/r%{rev}-%{date}/
 (cd %{buildroot}/opt/bgclang/r%{rev}-%{date}/lib/clang/?.* && rm -f lib && ln -si ../../../compiler-rt/lib lib)
 (cd %{buildroot}/opt/bgclang/r%{rev}-%{date}/lib/clang/?.*/include && rm -f sanitizer && ln -si ../../../../compiler-rt/lib/clang/include/sanitizer sanitizer)
