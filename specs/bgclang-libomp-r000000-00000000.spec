@@ -28,30 +28,37 @@ the LLVM/Clang projects (http://llvm.org/).
 %setup -q -n openmp
 
 %build
+export PATH=/soft/buildtools/cmake/current/bin:$PATH
+
 PREFIX=$(rpm --dbpath %{_dbpath} -q --queryformat '%{INSTPREFIXES}' bgclang-r%{rev}-%{date} 2> /dev/null)
 CC=$PREFIX/r%{rev}-%{date}/bin/bgclang
 
-cd runtime
-make -f Makefile.bgq CC=$CC CXX=$CC++
-cd ..
+DEST=%{buildroot}/opt/bgclang/r%{rev}-%{date}/omp
+
+mkdir -p ../openmp-build
+cd ../openmp-build
+rm -rf CMakeCache.txt CMakeFiles
+
+cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=$DEST -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CC++ -DLIBOMP_OMPT_SUPPORT=ON -DLIBOMP_OMPT_BLAME=ON -DLIBOMP_OMPT_TRACE=ON -DCMAKE_SHARED_LINKER_FLAGS='-Wl,--build-id' ../openmp
+make clean
+make VERBOSE=1
+
+mkdir -p ../openmp-build-static
+cd ../openmp-build-static
+rm -rf CMakeCache.txt CMakeFiles
+
+cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=$DEST -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CC++ -DLIBOMP_OMPT_SUPPORT=ON -DLIBOMP_OMPT_BLAME=ON -DLIBOMP_OMPT_TRACE=ON -DLIBOMP_ENABLE_SHARED=0 ../openmp
+make clean
+make VERBOSE=1
 
 %install
 DEST=%{buildroot}/opt/bgclang/r%{rev}-%{date}/omp
 
-set -x
-mkdir -p $DEST
-mkdir -p $DEST/lib
-mkdir -p $DEST/include
+cd ../openmp-build
+make VERBOSE=1 install
 
-cd runtime/build
-for f in libiomp5.a libiomp5.so.1.0 libiomp5.so.1 libiomp5.so; do
-	cp -d $f $DEST/lib/
-	(cd $DEST/lib/ && ln -si $f $(echo $f | sed 's/iomp5/omp/'))
-done
-
-cp omp.h $DEST/include/omp.h
-cp ompt.h $DEST/include/ompt.h
-set +x
+cd ../openmp-build-static
+make VERBOSE=1 install
 
 %files
 /opt/bgclang/r%{rev}-%{date}/omp
