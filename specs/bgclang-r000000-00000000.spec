@@ -79,7 +79,7 @@ cd ../../..
 (cd ../llvm-build && make -j32 DESTDIR=%{buildroot} install)
 cp -Rf %{_builddir}/llvm/tools/clang/tools/scan-{build,view} %{buildroot}/opt/bgclang/r%{rev}-%{date}/
 (cd %{buildroot}/opt/bgclang/r%{rev}-%{date}/lib/clang/?.* && rm -f lib && ln -si ../../../compiler-rt/lib lib)
-(cd %{buildroot}/opt/bgclang/r%{rev}-%{date}/lib/clang/?.*/include && rm -f sanitizer && ln -si ../../../../compiler-rt/lib/clang/include/sanitizer sanitizer)
+(cd %{buildroot}/opt/bgclang/r%{rev}-%{date}/lib/clang/?.*/include && rm -f sanitizer && ln -si ../../../../compiler-rt/include/sanitizer sanitizer)
 
 (cd %{buildroot}/opt/bgclang/r%{rev}-%{date} && tar -xjvf %{_sourcedir}/bin-r%{rev}-%{date}.tar.bz2)
 (cd %{buildroot}/opt/bgclang/r%{rev}-%{date} && tar -xjvf %{_sourcedir}/wbin-r%{rev}-%{date}.tar.bz2)
