@@ -111,6 +111,6 @@ done
 
 cd r%{rev}-%{date}
 (cd binutils/lib && mkdir -p bfd-plugins && cd bfd-plugins && ln -sf ../../../lib/LLVMgold.so && ln -sf ../../../lib/libLTO.so && ln -sf ../../../lib/libLLVM-3.?svn.so && ln -sf ../../../../stage2/libc++/lib/libc++.so.1)
-(cd binutils/bin && for f in ar nm ld* as; do (cd ../../wbin && ln -sf ../binutils/bin/$f bgclang-$f && ln -sf ../binutils/bin/$f powerpc64-bgq-linux-clang-$f); done)
+(cd binutils/bin && for f in ar nm ld* as ranlib strip; do (cd ../../wbin && ln -sf ../binutils/bin/$f bgclang-$f && ln -sf ../binutils/bin/$f powerpc64-bgq-linux-clang-$f); done)
 (cd gdb/bin && for f in gdb; do (cd ../../wbin && ln -sf ../gdb/bin/$f bgclang-$f && ln -sf ../gdb/bin/$f powerpc64-bgq-linux-clang-$f); done)
 
