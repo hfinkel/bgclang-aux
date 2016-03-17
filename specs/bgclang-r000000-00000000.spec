@@ -66,7 +66,7 @@ export LD_LIBRARY_PATH
 
 CXXLDFLAGS="-L$PREFIX/stage2/libc++/lib -stdlib=libc++ '-Wl,-rpath,\$ORIGIN/../../stage2/libc++/lib' -Wl,--build-id"
 
-(cd ../llvm-build && cmake -DCMAKE_C_COMPILER=$PREFIX/stage2/bin/clang -DCMAKE_CXX_COMPILER=$PREFIX/stage2/bin/clang++ -DLLVM_ENABLE_EH=ON -DLLVM_ENABLE_RTTI=ON -DCMAKE_CXX_FLAGS="-I$PREFIX/stage2/libc++/include/c++/v1" -DCMAKE_EXE_LINKER_FLAGS="$CXXLDFLAGS" -DCMAKE_SHARED_LINKER_FLAGS="$CXXLDFLAGS" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O3 -fno-altivec" -DCMAKE_INSTALL_PREFIX=/opt/bgclang/r%{rev}-%{date} -DLLVM_BINUTILS_INCDIR=$BUINC -DCLANG_VENDOR="bgclang r%{rev}-%{date}" ../llvm)
+(cd ../llvm-build && cmake -DCMAKE_C_COMPILER=$PREFIX/stage2/bin/clang -DCMAKE_CXX_COMPILER=$PREFIX/stage2/bin/clang++ -DLLVM_ENABLE_EH=ON -DLLVM_ENABLE_RTTI=ON -DCMAKE_CXX_FLAGS="-I$PREFIX/stage2/libc++/include/c++/v1" -DCMAKE_EXE_LINKER_FLAGS="$CXXLDFLAGS" -DCMAKE_SHARED_LINKER_FLAGS="$CXXLDFLAGS" -DCMAKE_MODULE_LINKER_FLAGS="$CXXLDFLAGS" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O3 -fno-altivec" -DCMAKE_INSTALL_PREFIX=/opt/bgclang/r%{rev}-%{date} -DLLVM_BINUTILS_INCDIR=$BUINC -DCLANG_VENDOR="bgclang r%{rev}-%{date}" ../llvm)
 (cd ../llvm-build && make -j32)
 
 %install
