@@ -54,7 +54,7 @@ if basename $0 | grep -q '11$'; then
 	CXX="${CXX}11"
 fi
 if [ $newlayout = 1 ]; then
-	CXXFLAGS=" -I${ppcflr}/comm/lib/gnu  -I${ppcflr} -I${ppcflr}/comm/sys/include -I${ppcflr}/spi/include -I${ppcflr}/spi/include/kernel/cnk"
+	CXXFLAGS=" -I${ppcflr}/comm/include/gnu  -I${ppcflr} -I${ppcflr}/comm/sys/include -I${ppcflr}/spi/include -I${ppcflr}/spi/include/kernel/cnk"
 	LDFLAGS=" -L${ppcflr}/comm/lib -L${ppcflr}/comm/lib -L${ppcflr}/comm/lib64 -L${ppcflr}/comm/lib -L${ppcflr}/spi/lib -L${ppcflr}/comm/sys/lib -L${ppcflr}/spi/lib -L${ppcflr}/comm/sys/lib   -L${ppcflr}/comm/lib64 -L${ppcflr}/comm/lib -L${ppcflr}/spi/lib"
 	LIBS="-lopa-gcc -lmpl-gcc  -lpami-gcc -lSPI -lSPI_cnk -lrt -lpthread -lstdc++ -lpthread  "
 else

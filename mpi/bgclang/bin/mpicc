@@ -54,7 +54,7 @@ includedir=${prefix}/include
 # configure (e.g., determining whehter -lsocket is needee)
 CC="/home/projects/llvm/bin/bgclang"
 if [ $newlayout = 1 ]; then
-	CFLAGS=" -I${ppcflr}/comm/lib/gnu  -I${ppcflr} -I${ppcflr}/comm/sys/include -I${ppcflr}/spi/include -I${ppcflr}/spi/include/kernel/cnk"
+	CFLAGS=" -I${ppcflr}/comm/include/gnu  -I${ppcflr} -I${ppcflr}/comm/sys/include -I${ppcflr}/spi/include -I${ppcflr}/spi/include/kernel/cnk"
 	CPPFLAGS="  -I${ppcflr}/comm/include"
 	LDFLAGS=" -L${ppcflr}/comm/lib -L${ppcflr}/comm/lib -L${ppcflr}/comm/lib64 -L${ppcflr}/comm/lib -L${ppcflr}/spi/lib -L${ppcflr}/comm/sys/lib -L${ppcflr}/spi/lib -L${ppcflr}/comm/sys/lib   -L${ppcflr}/comm/lib64 -L${ppcflr}/comm/lib -L${ppcflr}/spi/lib"
 	LIBS="-lopa-gcc -lmpl-gcc  -lpami-gcc -lSPI -lSPI_cnk -lrt -lpthread -lstdc++ -lpthread  "
