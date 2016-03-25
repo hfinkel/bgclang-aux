@@ -28,8 +28,8 @@ the bgclang package set.
 %patch -P 0 -p1
 
 %build
-mkdir -p build
-cd build
+mkdir -p gdb-build
+cd gdb-build
 
 cat >> ../include/dchange.h <<-EOF;
 	#ifndef DCHANGE
@@ -87,13 +87,13 @@ set +x
 
 # Note: Currently the gas BG/Q patches are not clean, so we need --enable-checking=no
 # TODO: Once the toolchain and libs are new enough for ld.gold, add --enable-gold=default 
-../configure --without-auto-load-safe-path --prefix=/opt/bgclang/r%{rev}-%{date}/gdb --enable-checking=no
+../configure --without-auto-load-safe-path --prefix=/opt/bgclang/r%{rev}-%{date}/gdb --enable-checking=no --with-python=no
 
 make -j32
 cd ..
 
 %install
-cd build
+cd gdb-build
 make DESTDIR=%{buildroot} install
 cd ..
 
