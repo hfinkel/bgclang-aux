@@ -29,6 +29,8 @@ which is mostly mpich-3.1.4 plus BG/Q I/O work from mpich-3.2.
 %setup -q -n MPICH-BlueGene
 
 %build
+export PATH=/bgsys/drivers/ppcfloor/gnu-linux/bin:$PATH
+
 COMPILERS="CC=powerpc64-bgq-linux-gcc CXX=powerpc64-bgq-linux-g++ F77=powerpc64-bgq-linux-gfortran FC=powerpc64-bgq-linux-gfortran"
 BASEFLAGS="--host=powerpc64-bgq-linux --with-device=pamid --with-file-system=gpfs:BGQ --with-pm=no --with-namepublisher=no --enable-timer-type=device --enable-fortran=no"
 
@@ -70,6 +72,8 @@ make -j32
 cd ..
 
 %install
+export PATH=/bgsys/drivers/ppcfloor/gnu-linux/bin:$PATH
+
 cd ..
 
 cd MPICH-BlueGene-build.legacy
