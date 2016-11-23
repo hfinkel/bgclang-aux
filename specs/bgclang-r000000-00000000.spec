@@ -8,10 +8,10 @@ Prefix: /opt/bgclang
 %define date 00000000
 
 Name: bgclang-r%{rev}-%{date}
-BuildRequires: bgclang-stage2
-BuildRequires: bgclang-stage2-libcxx
+BuildRequires: bgclang-stage3
+BuildRequires: bgclang-stage3-libcxx
 BuildRequires: bgclang-binutils-r%{rev}-%{date}
-Requires: bgclang-stage2-libcxx
+Requires: bgclang-stage3-libcxx
 Requires: bgclang-binutils-r%{rev}-%{date}
 Requires: bgclang-gdb-r%{rev}-%{date}
 Requires: toolchain-fixup = 4.7.2
@@ -61,18 +61,18 @@ cd ../../..
 rm -rf ../llvm-build
 mkdir -p ../llvm-build
 
-LD_LIBRARY_PATH="$PREFIX/stage2/libc++/lib:$LD_LIBRARY_PATH"
+LD_LIBRARY_PATH="$PREFIX/stage3/libc++/lib:$LD_LIBRARY_PATH"
 export LD_LIBRARY_PATH
 
-CXXLDFLAGS="-L$PREFIX/stage2/libc++/lib -stdlib=libc++ '-Wl,-rpath,\$ORIGIN/../../stage2/libc++/lib' -Wl,--build-id"
+CXXLDFLAGS="-L$PREFIX/stage3/libc++/lib -stdlib=libc++ '-Wl,-rpath,\$ORIGIN/../../stage3/libc++/lib' -Wl,--build-id"
 
-(cd ../llvm-build && cmake -DCMAKE_C_COMPILER=$PREFIX/stage2/bin/clang -DCMAKE_CXX_COMPILER=$PREFIX/stage2/bin/clang++ -DLLVM_ENABLE_EH=ON -DLLVM_ENABLE_RTTI=ON -DCMAKE_CXX_FLAGS="-I$PREFIX/stage2/libc++/include/c++/v1" -DCMAKE_EXE_LINKER_FLAGS="$CXXLDFLAGS" -DCMAKE_SHARED_LINKER_FLAGS="$CXXLDFLAGS" -DCMAKE_MODULE_LINKER_FLAGS="$CXXLDFLAGS" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O3 -fno-altivec" -DCMAKE_INSTALL_PREFIX=/opt/bgclang/r%{rev}-%{date} -DLLVM_BINUTILS_INCDIR=$BUINC -DCLANG_VENDOR="bgclang r%{rev}-%{date}" ../llvm)
+(cd ../llvm-build && cmake -DCMAKE_C_COMPILER=$PREFIX/stage3/bin/clang -DCMAKE_CXX_COMPILER=$PREFIX/stage3/bin/clang++ -DLLVM_ENABLE_EH=ON -DLLVM_ENABLE_RTTI=ON -DCMAKE_CXX_FLAGS="-I$PREFIX/stage3/libc++/include/c++/v1" -DCMAKE_EXE_LINKER_FLAGS="$CXXLDFLAGS" -DCMAKE_SHARED_LINKER_FLAGS="$CXXLDFLAGS" -DCMAKE_MODULE_LINKER_FLAGS="$CXXLDFLAGS" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O3 -fno-altivec" -DCMAKE_INSTALL_PREFIX=/opt/bgclang/r%{rev}-%{date} -DLLVM_BINUTILS_INCDIR=$BUINC -DCLANG_VENDOR="bgclang r%{rev}-%{date}" ../llvm)
 (cd ../llvm-build && make -j32)
 
 %install
 PREFIX=$(rpm --dbpath %{_dbpath} -q --queryformat '%{INSTPREFIXES}' bgclang-binutils-r%{rev}-%{date} 2> /dev/null)
 
-LD_LIBRARY_PATH="$PREFIX/stage2/libc++/lib:$LD_LIBRARY_PATH"
+LD_LIBRARY_PATH="$PREFIX/stage3/libc++/lib:$LD_LIBRARY_PATH"
 export LD_LIBRARY_PATH
 
 cd ../../..
@@ -110,7 +110,7 @@ for d in bin docs include lib scan-build scan-view share wbin mpi; do
 done
 
 cd r%{rev}-%{date}
-(cd binutils/lib && mkdir -p bfd-plugins && cd bfd-plugins && ln -sf ../../../lib/LLVMgold.so && ln -sf ../../../lib/libLTO.so && ln -sf ../../../lib/libLLVM-4.?svn.so && ln -sf ../../../../stage2/libc++/lib/libc++.so.1)
+(cd binutils/lib && mkdir -p bfd-plugins && cd bfd-plugins && ln -sf ../../../lib/LLVMgold.so && ln -sf ../../../lib/libLTO.so && ln -sf ../../../lib/libLLVM-4.?svn.so && ln -sf ../../../../stage3/libc++/lib/libc++.so.1)
 (cd binutils/bin && for f in ar nm ld* as ranlib strip; do (cd ../../wbin && ln -sf ../binutils/bin/$f bgclang-$f && ln -sf ../binutils/bin/$f powerpc64-bgq-linux-clang-$f); done)
 (cd gdb/bin && for f in gdb; do (cd ../../wbin && ln -sf ../gdb/bin/$f bgclang-$f && ln -sf ../gdb/bin/$f powerpc64-bgq-linux-clang-$f); done)
 (cd wbin && ln -sf ../bin/llvm-opt-report bgclang-opt-report)
