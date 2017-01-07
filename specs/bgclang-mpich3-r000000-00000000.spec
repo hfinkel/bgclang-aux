@@ -16,6 +16,7 @@ Vendor: ALCF (Argonne Leadership Computing Facility)
 Group: Development/Compilers
 URL: http://trac.alcf.anl.gov/projects/llvm-bgq/
 Source0: MPICH-BlueGene.tar.bz2
+Patch0: mpich3-bg-dt-noassert.patch
 AutoReqProv: no
 
 %description
@@ -27,6 +28,7 @@ which is mostly mpich-3.1.4 plus BG/Q I/O work from mpich-3.2.
 
 %prep
 %setup -q -n MPICH-BlueGene
+%patch -P 0 -p1
 
 %build
 export PATH=/bgsys/drivers/ppcfloor/gnu-linux/bin:$PATH
