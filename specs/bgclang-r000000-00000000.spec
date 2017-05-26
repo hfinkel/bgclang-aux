@@ -30,6 +30,7 @@ Source4: wbin-r%{rev}-%{date}.tar.bz2
 Source5: clang-tools-extra-r%{rev}.tar.bz2
 Source6: ppcfloor-fixup-r%{rev}-%{date}.tar.bz2
 Source7: c11threads-r%{rev}-%{date}.tar.bz2
+Patch0: flang-clang-r%{rev}-%{date}.patch
 
 AutoReqProv: no
 
@@ -47,6 +48,7 @@ cd ..
 cd ../../..
 
 cd tools/clang
+%patch -P 0 -p1
 
 cd ../..
 
