@@ -81,6 +81,9 @@ cd ..
 %install
 export PATH=/bgsys/drivers/ppcfloor/gnu-linux/bin:$PATH
 
+PREFIX=$(rpm --dbpath %{_dbpath} -q --queryformat '%{INSTPREFIXES}' bgclang-r%{rev}-%{date} 2> /dev/null)
+export PATH=$PREFIX/r%{rev}-%{date}/wbin:$PATH
+
 cd ..
 
 cd MPICH-BlueGene-build.legacy
