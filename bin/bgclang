@@ -55,6 +55,8 @@ fi
 if basename $0 | grep -q '[+]\{2\}\(11\)\?$'; then
 	CLANG="$CLANG++"
 	BGCLANG_TARGET_INC="$BGCLANG_TARGET_INC -Xclang -isystem -Xclang /home/projects/llvm/r000000-00000000/libstdc++fixup/include -Xclang -isystem -Xclang $BGSYS_FLOOR/$GNU_LINUX/powerpc64-bgq-linux/include/c++/$VLIBSTDCXX -Xclang -isystem -Xclang $BGSYS_FLOOR/$GNU_LINUX/powerpc64-bgq-linux/include/c++/$VLIBSTDCXX/powerpc64-bgq-linux"
+elif basename $0 | grep -q 'flang$'; then
+	CLANG="$(dirname $CLANG)/flang"
 fi
 
 BGCLANG_TARGET_INC="$BGCLANG_TARGET_INC -Xclang -isystem -Xclang $BGSYS_FLOOR/$GNU_LINUX/powerpc64-bgq-linux/sys-include"
@@ -167,11 +169,11 @@ for arg in $user_params; do
 		:
 	;;
 	# file extension list from lib/Driver/Types.cpp
-	*.c|*.m|*.M|*.h|*.C|*.H|*.F|*.S|*.mm|*.cc|*.CC|*.cl|*.cp|*.cu|*.hh|*.hpp|*.ads|*.adb|*.c++|*.C++|*.cxx|*.cpp|*.CPP|*.CXX|*.fpp|*.FPP|*.F90|*.F95)
+	*.c|*.m|*.M|*.h|*.C|*.H|*.F|*.S|*.mm|*.cc|*.CC|*.cl|*.cp|*.cu|*.hh|*.hpp|*.ads|*.adb|*.c++|*.C++|*.cxx|*.cpp|*.CPP|*.CXX|*.fpp|*.FPP|*.F90|*.F95|*.F03|*.F08)
 		will_compile=1
 		will_pp=1
 	;;
-	*.i|*.f|*.s|*.ii|*.mi|*.bc|*.ll|*.ast|*.for|*.FOR|*.f90|*.f95|*.mii)
+	*.i|*.f|*.s|*.ii|*.mi|*.bc|*.ll|*.ast|*.for|*.FOR|*.f90|*.f95|*.f03|*.f08|*.mii)
 		will_compile=1
 	;;
 	*)
