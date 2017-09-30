@@ -57,6 +57,8 @@ make -j32 VERBOSE=1
 %install
 DEST=%{buildroot}/opt/bgclang/r%{rev}-%{date}
 
+PREFIX=$(rpm --dbpath %{_dbpath} -q --queryformat '%{INSTPREFIXES}' bgclang-r%{rev}-%{date} 2> /dev/null)
+
 LD_LIBRARY_PATH="$PREFIX/stage3/libc++/lib:$LD_LIBRARY_PATH"
 export LD_LIBRARY_PATH
 
