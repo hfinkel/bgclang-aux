@@ -33,7 +33,7 @@ the LLVM/Clang projects (http://llvm.org/).
 export PATH=/soft/buildtools/cmake/current/bin:$PATH
 export PATH=/soft/interpreters/python-2.7.9/powerpc64-linux-gnu/bin:$PATH
 
-DEST=%{buildroot}/opt/bgclang/r%{rev}-%{date}
+DEST=%{buildroot}/opt/bgclang/r%{rev}-%{date}/flang
 
 PREFIX=$(rpm --dbpath %{_dbpath} -q --queryformat '%{INSTPREFIXES}' bgclang-r%{rev}-%{date} 2> /dev/null)
 CC=$PREFIX/r%{rev}-%{date}/bin/clang
@@ -55,7 +55,7 @@ make -j32 VERBOSE=1 || true
 make -j32 VERBOSE=1
 
 %install
-DEST=%{buildroot}/opt/bgclang/r%{rev}-%{date}
+DEST=%{buildroot}/opt/bgclang/r%{rev}-%{date}/flang
 
 PREFIX=$(rpm --dbpath %{_dbpath} -q --queryformat '%{INSTPREFIXES}' bgclang-r%{rev}-%{date} 2> /dev/null)
 
@@ -66,7 +66,7 @@ cd ../flang-build
 make VERBOSE=1 install
 
 %files
-/opt/bgclang/r%{rev}-%{date}
+/opt/bgclang/r%{rev}-%{date}/flang
 
 %post
 cd ${RPM_INSTALL_PREFIX}

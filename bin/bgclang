@@ -47,6 +47,7 @@ if [ "x$BGCLANG_STATIC_LINKING" != xno ]; then
 	link_static=1
 fi
 
+is_flang=0
 BGCLANG_TARGET_INC="-Xclang -isystem -Xclang /home/projects/llvm/r000000-00000000/c11threads -Xclang -isystem -Xclang /home/projects/llvm/r000000-00000000/ppcfloor-fixup -Xclang -isystem -Xclang /home/projects/llvm/r000000-00000000/ppcfloor-fixup/spi/include -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR/comm/gcc/include -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR/comm/lib/gnu -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR/comm/sys/include -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR/spi/include -Xclang -isystem -Xclang $ORIG_BGSYS_FLOOR/spi/include/kernel/cnk"
 if [ -d $SLEEF ]; then
 	BGCLANG_TARGET_INC="$BGCLANG_TARGET_INC -I$SLEEF/include"
@@ -57,6 +58,8 @@ if basename $0 | grep -q '[+]\{2\}\(11\)\?$'; then
 	BGCLANG_TARGET_INC="$BGCLANG_TARGET_INC -Xclang -isystem -Xclang /home/projects/llvm/r000000-00000000/libstdc++fixup/include -Xclang -isystem -Xclang $BGSYS_FLOOR/$GNU_LINUX/powerpc64-bgq-linux/include/c++/$VLIBSTDCXX -Xclang -isystem -Xclang $BGSYS_FLOOR/$GNU_LINUX/powerpc64-bgq-linux/include/c++/$VLIBSTDCXX/powerpc64-bgq-linux"
 elif basename $0 | grep -q 'flang$'; then
 	CLANG="$(dirname $CLANG)/flang"
+	is_flang=1
+	BGCLANG_TARGET_FLAGS="$BGCLANG_TARGET_FLAGS -B/home/projects/llvm/r000000-00000000/flang/bin -I/home/projects/llvm/r000000-00000000/flang/include"
 fi
 
 BGCLANG_TARGET_INC="$BGCLANG_TARGET_INC -Xclang -isystem -Xclang $BGSYS_FLOOR/$GNU_LINUX/powerpc64-bgq-linux/sys-include"
@@ -214,6 +217,16 @@ if [ $use_libcxx = 1 ]; then
 		BGCLANG_TARGET_FLAGS="$BGCLANG_TARGET_FLAGS -L/home/projects/llvm/r000000-00000000/libc++/lib"
 		if [ $link_static = 0 ]; then
 			BGCLANG_TARGET_FLAGS="$BGCLANG_TARGET_FLAGS -Wl,-rpath -Wl,/home/projects/llvm/r000000-00000000/libc++/lib"
+		fi
+	fi
+fi
+
+if [ $is_flang = 1 ]; then
+	BGCLANG_TARGET_FLAGS="$BGCLANG_TARGET_FLAGS -B/home/projects/llvm/r000000-00000000/flang/bin -I/home/projects/llvm/r000000-00000000/flang/include -Wno-override-module"
+	if [ $will_link = 1 ]; then
+		BGCLANG_TARGET_FLAGS="$BGCLANG_TARGET_FLAGS -L/home/projects/llvm/r000000-00000000/flang/lib"
+		if [ $link_static = 0 ]; then
+			BGCLANG_TARGET_FLAGS="$BGCLANG_TARGET_FLAGS -Wl,-rpath -Wl,/home/projects/llvm/r000000-00000000/flang/lib"
 		fi
 	fi
 fi
