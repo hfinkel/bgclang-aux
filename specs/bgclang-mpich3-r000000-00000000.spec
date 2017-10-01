@@ -9,7 +9,9 @@ Prefix: /opt/bgclang
 
 Name: bgclang-mpich3-r%{rev}-%{date}
 BuildRequires: bgclang-r%{rev}-%{date}
+BuildRequires: bgclang-flang-r%{rev}-%{date}
 Requires: bgclang-r%{rev}-%{date}
+Requires: bgclang-flang-r%{rev}-%{date}
 Version: 1
 Release: 1
 Summary: MPICH v3 for the BG/Q
@@ -38,8 +40,8 @@ export PATH=/bgsys/drivers/ppcfloor/gnu-linux/bin:$PATH
 PREFIX=$(rpm --dbpath %{_dbpath} -q --queryformat '%{INSTPREFIXES}' bgclang-r%{rev}-%{date} 2> /dev/null)
 export PATH=$PREFIX/r%{rev}-%{date}/wbin:$PATH
 
-COMPILERS="CC=powerpc64-bgq-linux-clang CXX=powerpc64-bgq-linux-clang++ F77=powerpc64-bgq-linux-gfortran FC=powerpc64-bgq-linux-gfortran"
-BASEFLAGS="--host=powerpc64-bgq-linux --with-device=pamid --with-file-system=gpfs:BGQ --with-pm=no --with-namepublisher=no --enable-timer-type=device --enable-fortran=no"
+COMPILERS="CC=powerpc64-bgq-linux-clang CXX=powerpc64-bgq-linux-clang++ F77=powerpc64-bgq-linux-flang FC=powerpc64-bgq-linux-flang"
+BASEFLAGS="--host=powerpc64-bgq-linux --with-device=pamid --with-file-system=gpfs:BGQ --with-pm=no --with-namepublisher=no --enable-timer-type=device --enable-fortran=yes"
 
 NDEBUGFLAGS="--enable-fast=nochkmsg,notiming,O3 --with-assert-level=0 --disable-error-messages --disable-debuginfo"
 NONLEGFLAGFS="--enable-thread-cs=per-object --with-atomic-primitives --enable-handle-allocation=tls --enable-refcount=lock-free --disable-predefined-refcount"
@@ -108,6 +110,7 @@ for d in bgclang-mpi3 bgclang-mpi3.ndebug bgclang-mpi3.legacy bgclang-mpi3.legac
 	ln -s mpicxx mpic++11
 	ln -s mpicxx mpiclang++
 	ln -s mpicxx mpiclang++11
+	ln -s mpifort mpiflang
 	rm -f mpichversion mpivars parkill
 	cd -
 
@@ -129,6 +132,8 @@ for d in bgclang-mpi3 bgclang-mpi3.ndebug bgclang-mpi3.legacy bgclang-mpi3.legac
 	find r%{rev}-%{date}/mpi/$d/bin -type f -exec sed -i 's/powerpc64-bgq-linux-clang/'$(echo ${RPM_INSTALL_PREFIX}/r%{rev}-%{date}/bin/bgclang |
 		sed 's/\//\\\//g')'/g' {} \;
 	find r%{rev}-%{date}/mpi/$d/bin -type f -exec sed -i 's/powerpc64-bgq-linux-clang++/'$(echo ${RPM_INSTALL_PREFIX}/r%{rev}-%{date}/bin/bgclang++ |
+		sed 's/\//\\\//g')'/g' {} \;
+	find r%{rev}-%{date}/mpi/$d/bin -type f -exec sed -i 's/powerpc64-bgq-linux-flang/'$(echo ${RPM_INSTALL_PREFIX}/r%{rev}-%{date}/bin/bgflang |
 		sed 's/\//\\\//g')'/g' {} \;
 	find r%{rev}-%{date}/mpi/$d/bin -type f -exec sed -i '/Directory locations:/a \
 ppcflr=$(readlink /bgsys/drivers/ppcfloor)' {} \;
