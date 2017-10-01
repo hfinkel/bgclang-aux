@@ -34,6 +34,8 @@ which is mostly mpich-3.1.4 plus BG/Q I/O work from mpich-3.2.
 %setup -q -n MPICH-BlueGene
 %patch -P 0 -p1
 
+find . -name configure -exec sed -i 's/tcc\*)/tcc* | flang*)/' {} \;
+
 %build
 export PATH=/bgsys/drivers/ppcfloor/gnu-linux/bin:$PATH
 
